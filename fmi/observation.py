@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 from __future__ import unicode_literals, division, print_function
+import os
 from datetime import datetime
 from dateutil.tz import tzutc
 from dateutil.parser import parse as parse_dt
@@ -32,3 +33,20 @@ class Observation(object):
         self.precipitation = point.get('precipitation', None)
         self.precipitation_1h = point.get('precipitation_1h', None)
         self.weather_symbol = int(point.get('weather_symbol', 0))
+
+    @property
+    def icon(self):
+        if self.weather_symbol is None:
+            return None
+
+        return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'symbols/%i.svg' % (self.weather_symbol))
+
+    @property
+    def icon_as_svg(self):
+        icon = self.icon
+        if icon is None:
+            return None
+
+        with open(icon, 'r') as f:
+            data = f.read()
+        return data
