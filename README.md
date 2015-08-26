@@ -14,10 +14,13 @@ pip install git+https://github.com/kipe/fmi.git
 Usage
 -----
 
-This libraty requires a valid FMI API key. You can get one from the [website](https://ilmatieteenlaitos.fi/rekisteroityminen-avoimen-datan-kayttajaksi) (only in Finnish).
+The library requires a valid FMI API key. You can get one from the [website](https://ilmatieteenlaitos.fi/rekisteroityminen-avoimen-datan-kayttajaksi) (only in Finnish).
+
+After acquiring the API key, the library usage is fairly simple:
 ```
 from fmi import FMI
 f = FMI('a-very-made-up-api-key', place='Lappeenranta')
+# f.observations() returns a list of Observation -objects for the last X hours.
 print(f.observations())
 ```
 
@@ -26,6 +29,7 @@ After setting the environment variables, you can use the library without "any" i
 ```
 from fmi import FMI
 f = FMI()
+# f.forecast() returns a list of Observation -objects (sorry, confusing, I know :P) for the next 36 hours
 print(f.forecast())
 ```
 
