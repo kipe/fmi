@@ -1,9 +1,7 @@
 # -*- encoding: utf-8 -*-
 from __future__ import unicode_literals, division, print_function
-import json
-import math
 import requests
-from dateutil.parser import parse as parse_dt
+from fmi.observation import Observation
 from bs4 import BeautifulSoup
 
 
@@ -26,7 +24,9 @@ class FMI(object):
         if identifier in ['wd_10min', 'winddirection']:
             return 'wind_direction', 1
         if identifier in ['r_1h', 'precipitation1h']:
-            return 'wind_direction', 1
+            return 'precipitation_1h', 1
+        if identifier in ['ri_10min', 'precipitationamount']:
+            return 'precipitation', 1
         if identifier in ['rh', 'humidity']:
             return 'relative_humidity', 1
         if identifier in ['n_man', 'totalcloudcover']:
@@ -39,7 +39,7 @@ class FMI(object):
             return 'weather_symbol', 1
         return None, 1
 
-    def _parse_response(self, r, as_json=False):
+    def _parse_response(self, r):
         bs = BeautifulSoup(r.text)
 
         d = {}
@@ -61,34 +61,11 @@ class FMI(object):
                 if timestamp not in d.keys():
                     d[timestamp] = {}
 
-                # If value is NaN and data requested as json, return None (as NaN isn't in JSON spec)
-                if math.isnan(value) and as_json:
-                    d[timestamp][identifier] = None
-                # Else use the raw value
-                else:
-                    d[timestamp][identifier] = value
+                d[timestamp][identifier] = value
 
-        # Convert the data to a list of dictionarys
-        reval = []
-        for k, v in d.items():
-            # Add timestamp to values
-            if as_json:
-                # If data is requested as json, don't modify timestamps (they're already JSON compatible)
-                v.update({'timestamp': k})
-            else:
-                v.update({'timestamp': parse_dt(k)})
-            # Append values to return value list
-            reval.append(v)
+        return sorted([Observation(k, v) for k, v in d.items()], key=lambda x: x.time)
 
-        # Sort values according to timestamp
-        reval = sorted(reval, key=lambda x: x['timestamp'])
-        # If requested as json, return via json.dumps
-        if as_json:
-            return json.dumps(reval)
-        # Otherwise, return as list of dictionaries
-        return reval
-
-    def get(self, storedquery_id, as_json=False, **params):
+    def get(self, storedquery_id, **params):
         query_params = {
             'place': self.place,
             'request': 'getFeature',
@@ -96,10 +73,10 @@ class FMI(object):
         }
         query_params.update(params)
 
-        return self._parse_response(requests.get(self.api_endpoint.format(apikey=self.apikey), params=query_params), as_json=as_json)
+        return self._parse_response(requests.get(self.api_endpoint.format(apikey=self.apikey), params=query_params))
 
-    def observations(self, as_json=False):
-        return self.get('fmi::observations::weather::timevaluepair', as_json=as_json, maxlocations=1)
+    def observations(self):
+        return self.get('fmi::observations::weather::timevaluepair', maxlocations=1)
 
-    def forecast(self, as_json=False):
-        return self.get('fmi::forecast::hirlam::surface::point::timevaluepair', as_json=as_json, maxlocations=1)
+    def forecast(self):
+        return self.get('fmi::forecast::hirlam::surface::point::timevaluepair', maxlocations=1)
