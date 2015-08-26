@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 from __future__ import unicode_literals, division, print_function
+import os
 import requests
 from fmi.observation import Observation
 from bs4 import BeautifulSoup
@@ -9,9 +10,13 @@ class FMI(object):
     apikey = None
     api_endpoint = 'http://data.fmi.fi/fmi-apikey/{apikey}/wfs'
 
-    def __init__(self, apikey, place):
-        self.apikey = apikey
-        self.place = place
+    def __init__(self, apikey=None, place=None):
+        self.apikey = os.environ.get('FMI_APIKEY', apikey)
+        self.place = os.environ.get('FMI_PLACE', place)
+        if self.apikey is None:
+            raise AttributeError('FMI API key is not set.')
+        if self.place is None:
+            raise AttributeError('FMI place is not set.')
 
     def _parse_identifier(self, x):
         identifier = x['gml:id'].split('-')[-1].lower()

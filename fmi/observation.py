@@ -34,6 +34,9 @@ class Observation(object):
         self.precipitation_1h = point.get('precipitation_1h', None)
         self.weather_symbol = int(point.get('weather_symbol', 0))
 
+    def __repr__(self):
+        return '<Observation: %s - %.1f C>' % (self.time.isoformat(), self.temperature)
+
     @property
     def icon(self):
         if self.weather_symbol is None:
