@@ -19,6 +19,11 @@ class Observation(object):
     precipitation = None
     precipitation_1h = None
     weather_symbol = None
+    radiation_global_accumulation = None
+    radiation_long_wave_accumulation = None
+    radiation_netsurface_long_wave_accumulation = None
+    radiation_netsurface_short_wave_accumulation = None
+    radiation_diffuse_accumulation = None
 
     def __init__(self, timestamp, point):
         self.time = parse_dt(timestamp)
@@ -33,6 +38,11 @@ class Observation(object):
         self.precipitation = point.get('precipitation', None)
         self.precipitation_1h = point.get('precipitation_1h', None)
         self.weather_symbol = int(point.get('weather_symbol', 0))
+        self.radiation_global_accumulation = point.get('radiation_global_accumulation', None)
+        self.radiation_long_wave_accumulation = point.get('radiation_long_wave_accumulation', None)
+        self.radiation_netsurface_long_wave_accumulation = point.get('radiation_netsurface_long_wave_accumulation', None)
+        self.radiation_netsurface_short_wave_accumulation = point.get('radiation_netsurface_short_wave_accumulation', None)
+        self.radiation_diffuse_accumulation = point.get('radiation_diffuse_accumulation', None)
 
     def __repr__(self):
         return '<Observation: %s - %.1f C>' % (self.time.isoformat(), self.temperature)
@@ -53,3 +63,12 @@ class Observation(object):
         with open(icon, 'r') as f:
             data = f.read()
         return data
+
+    def as_influx_measurement(self):
+        return {
+            'time': self.time,
+            'fields': {
+                key: value
+                for key, value in self.__dict__.items() if key not in ['time'] and value is not None
+            }
+        }
