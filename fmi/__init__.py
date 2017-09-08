@@ -10,13 +10,14 @@ class FMI(object):
     apikey = None
     api_endpoint = 'http://data.fmi.fi/fmi-apikey/{apikey}/wfs'
 
-    def __init__(self, apikey=None, place=None):
+    def __init__(self, apikey=None, place=None, coordinates=None):
         self.apikey = os.environ.get('FMI_APIKEY', apikey)
         self.place = os.environ.get('FMI_PLACE', place)
+        self.coordinates = os.environ.get('FMI_COORDINATES', coordinates)
         if self.apikey is None:
             raise AttributeError('FMI API key is not set.')
-        if self.place is None:
-            raise AttributeError('FMI place is not set.')
+        if self.place is None and self.coordinates is None:
+            raise AttributeError('FMI place or coordinates not set.')
 
     def _parse_identifier(self, x):
         identifier = x['gml:id'].split('-')[-1].lower()
@@ -42,10 +43,20 @@ class FMI(object):
             return 'dew_point', 1
         if identifier in ['weathersymbol3']:
             return 'weather_symbol', 1
+        if identifier in ['radiationglobalaccumulation']:
+            return 'radiation_global_accumulation', 1
+        if identifier in ['radiationlwaccumulation']:
+            return 'radiation_long_wave_accumulation', 1
+        if identifier in ['radiationnetsurfacelwaccumulation']:
+            return 'radiation_netsurface_long_wave_accumulation', 1
+        if identifier in ['radiationnetsurfaceswaccumulation']:
+            return 'radiation_netsurface_short_wave_accumulation', 1
+        if identifier in ['radiationdiffuseaccumulation']:
+            return 'radiation_diffuse_accumulation', 1
         return None, 1
 
     def _parse_response(self, r):
-        bs = BeautifulSoup(r.text)
+        bs = BeautifulSoup(r.text, 'html.parser')
 
         d = {}
         # Loop over all measurement timeseries
@@ -72,10 +83,13 @@ class FMI(object):
 
     def get(self, storedquery_id, **params):
         query_params = {
-            'place': self.place,
             'request': 'getFeature',
             'storedquery_id': storedquery_id,
         }
+        if self.coordinates is None:
+            query_params['place'] = self.place
+        else:
+            query_params['latlon'] = self.coordinates
         query_params.update(params)
 
         return self._parse_response(requests.get(self.api_endpoint.format(apikey=self.apikey), params=query_params))
