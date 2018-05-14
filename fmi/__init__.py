@@ -94,8 +94,8 @@ class FMI(object):
 
         return self._parse_response(requests.get(self.api_endpoint.format(apikey=self.apikey), params=query_params))
 
-    def observations(self):
-        return self.get('fmi::observations::weather::timevaluepair', maxlocations=1)
+    def observations(self, **params):
+        return self.get('fmi::observations::weather::timevaluepair', maxlocations=1, **params)
 
-    def forecast(self):
-        return self.get('fmi::forecast::hirlam::surface::point::timevaluepair', maxlocations=1)
+    def forecast(self, **params):
+        return self.get('fmi::forecast::hirlam::surface::point::timevaluepair', maxlocations=1, **params)
