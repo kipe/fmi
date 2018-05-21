@@ -3,7 +3,7 @@ from distutils.core import setup
 
 setup(
     name='fmi',
-    version='0.10',
+    version='0.20',
     description='FMI weather data fetcher',
     author='Kimmo Huoman',
     author_email='kipenroskaposti@gmail.com',
