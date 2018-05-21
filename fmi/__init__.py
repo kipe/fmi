@@ -97,5 +97,7 @@ class FMI(object):
     def observations(self, **params):
         return self.get('fmi::observations::weather::timevaluepair', maxlocations=1, **params)
 
-    def forecast(self, **params):
-        return self.get('fmi::forecast::hirlam::surface::point::timevaluepair', maxlocations=1, **params)
+    def forecast(self, model='hirlam', **params):
+        if model not in ['hirlam', 'harmonie']:
+            raise ValueError('model must be one of "hirlam", "harmonie"')
+        return self.get('fmi::forecast::%s::surface::point::timevaluepair' % (model), maxlocations=1, **params)
