@@ -1,5 +1,3 @@
-# -*- encoding: utf-8 -*-
-from __future__ import unicode_literals, division, print_function
 import os
 from datetime import datetime
 from dateutil.tz import tzutc
