@@ -59,7 +59,8 @@ class FMI(object):
         d = {}
         # Loop over all measurement timeseries
         for mts in bs.find_all('wml2:measurementtimeseries'):
-            # Try to parse identifier as "human readable", get multiplier also (mainly for cloud coverage)
+            # Try to parse identifier as "human readable",
+            # get multiplier also (mainly for cloud coverage)
             identifier, multiplier = self._parse_identifier(mts)
             if identifier is None:
                 continue
@@ -68,16 +69,20 @@ class FMI(object):
             for p in mts.find_all('wml2:point'):
                 # Find timestamp
                 timestamp = p.find('wml2:time').text
-                # Find value and multiply if by multiplier given in _parse_identifier()
+                # Find value and multiply if by multiplier
+                # given in _parse_identifier()
                 value = float(p.find('wml2:value').text) * multiplier
 
-                # If timestamp isn't already initialized, initialize as dictionary
+                # If timestamp isn't already initialized,
+                # initialize as dictionary
                 if timestamp not in d.keys():
                     d[timestamp] = {}
 
                 d[timestamp][identifier] = value
 
-        return sorted([Observation(k, v) for k, v in d.items()], key=lambda x: x.time)
+        return sorted(
+            [Observation(k, v) for k, v in d.items()],
+            key=lambda x: x.time)
 
     def get(self, storedquery_id, **params):
         query_params = {
@@ -90,12 +95,21 @@ class FMI(object):
             query_params['latlon'] = self.coordinates
         query_params.update(params)
 
-        return self._parse_response(requests.get(self.api_endpoint.format(apikey=self.apikey), params=query_params))
+        return self._parse_response(
+            requests.get(
+                self.api_endpoint.format(apikey=self.apikey),
+                params=query_params))
 
     def observations(self, **params):
-        return self.get('fmi::observations::weather::timevaluepair', maxlocations=1, **params)
+        return self.get(
+            'fmi::observations::weather::timevaluepair',
+            maxlocations=1,
+            **params)
 
     def forecast(self, model='hirlam', **params):
         if model not in ['hirlam', 'harmonie']:
             raise ValueError('model must be one of "hirlam", "harmonie"')
-        return self.get('fmi::forecast::%s::surface::point::timevaluepair' % (model), maxlocations=1, **params)
+        return self.get(
+            'fmi::forecast::%s::surface::point::timevaluepair' % (model),
+            maxlocations=1,
+            **params)

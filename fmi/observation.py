@@ -36,21 +36,29 @@ class Observation(object):
         self.precipitation = point.get('precipitation', None)
         self.precipitation_1h = point.get('precipitation_1h', None)
         self.weather_symbol = int(point.get('weather_symbol', 0))
-        self.radiation_global_accumulation = point.get('radiation_global_accumulation', None)
-        self.radiation_long_wave_accumulation = point.get('radiation_long_wave_accumulation', None)
-        self.radiation_netsurface_long_wave_accumulation = point.get('radiation_netsurface_long_wave_accumulation', None)
-        self.radiation_netsurface_short_wave_accumulation = point.get('radiation_netsurface_short_wave_accumulation', None)
-        self.radiation_diffuse_accumulation = point.get('radiation_diffuse_accumulation', None)
+        self.radiation_global_accumulation = point.get(
+            'radiation_global_accumulation', None)
+        self.radiation_long_wave_accumulation = point.get(
+            'radiation_long_wave_accumulation', None)
+        self.radiation_netsurface_long_wave_accumulation = point.get(
+            'radiation_netsurface_long_wave_accumulation', None)
+        self.radiation_netsurface_short_wave_accumulation = point.get(
+            'radiation_netsurface_short_wave_accumulation', None)
+        self.radiation_diffuse_accumulation = point.get(
+            'radiation_diffuse_accumulation', None)
 
     def __repr__(self):
-        return '<Observation: %s - %.1f C>' % (self.time.isoformat(), self.temperature)
+        return '<Observation: %s - %.1f C>' % (
+            self.time.isoformat(), self.temperature)
 
     @property
     def icon(self):
         if self.weather_symbol is None:
             return None
 
-        return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'symbols/%i.svg' % (self.weather_symbol))
+        return os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            'symbols/%i.svg' % (self.weather_symbol))
 
     @property
     def icon_as_svg(self):
@@ -67,6 +75,7 @@ class Observation(object):
             'time': self.time,
             'fields': {
                 key: value
-                for key, value in self.__dict__.items() if key not in ['time'] and value is not None
+                for key, value in self.__dict__.items()
+                if key not in ['time'] and value is not None
             }
         }
