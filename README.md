@@ -9,7 +9,7 @@ Currently just a quick hack, as I needed this for a project.
 Installation
 -----
 ```
-pip install git+https://github.com/kipe/fmi.git
+pip install fmi_weather
 ```
 
 Usage
