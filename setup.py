@@ -3,7 +3,7 @@ from distutils.core import setup
 
 setup(
     name='fmi_weather',
-    version='0.50.1',
+    version='0.80.0',
     description='FMI weather data fetcher',
     author='Kimmo Huoman',
     author_email='kipenroskaposti@gmail.com',
@@ -16,7 +16,7 @@ setup(
         ],
     },
     install_requires=[
-        'beautifulsoup4>=4.4.0',
-        'python-dateutil>=2.4.2',
+        'beautifulsoup4>=4.8.1',
+        'python-dateutil>=2.8.0',
         'requests>=2.20.0',
     ])

@@ -1,19 +1,21 @@
 import os
 import requests
+import warnings
 from .observation import Observation
 from bs4 import BeautifulSoup
 
 
 class FMI(object):
     apikey = None
-    api_endpoint = 'http://data.fmi.fi/fmi-apikey/{apikey}/wfs'
+    api_endpoint = 'https://opendata.fmi.fi/wfs'
 
     def __init__(self, apikey=None, place=None, coordinates=None):
         self.apikey = os.environ.get('FMI_APIKEY', apikey)
         self.place = os.environ.get('FMI_PLACE', place)
         self.coordinates = os.environ.get('FMI_COORDINATES', coordinates)
-        if self.apikey is None:
-            raise AttributeError('FMI API key is not set.')
+        if self.apikey is not None:
+            warnings.simplefilter('default')
+            warnings.warn('The use of FMI API key is deprecated.', DeprecationWarning)
         if self.place is None and self.coordinates is None:
             raise AttributeError('FMI place or coordinates not set.')
 
@@ -97,7 +99,7 @@ class FMI(object):
 
         return self._parse_response(
             requests.get(
-                self.api_endpoint.format(apikey=self.apikey),
+                self.api_endpoint,
                 params=query_params))
 
     def observations(self, **params):
