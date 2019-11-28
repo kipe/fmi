@@ -15,18 +15,15 @@ pip install fmi_weather
 Usage
 -----
 
-The library requires a valid FMI API key. You can get one from the
-[website](https://ilmatieteenlaitos.fi/rekisteroityminen-avoimen-datan-kayttajaksi) (only in Finnish).
-
-After acquiring the API key, the library usage is fairly simple:
+The library usage is fairly simple:
 ```
 from fmi import FMI
-f = FMI('a-very-made-up-api-key', place='Lappeenranta')
+f = FMI(place='Lappeenranta')
 # f.observations() returns a list of Observation -objects for the last X hours.
 print(f.observations())
 ```
 
-Another way to set the API key and place is by setting them in environment variables FMI_APIKEY and FMI_PLACE.
+Another way to set the API key and place is by setting them in environment variables FMI_PLACE.
 After setting the environment variables, you can use the library without "any" initialization:
 ```
 from fmi import FMI
