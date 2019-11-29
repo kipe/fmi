@@ -1,4 +1,4 @@
-FMI weather observation and forecast fetcher
+FMI weather observation and forecast fetcher [![Build Status](https://travis-ci.org/kipe/fmi.svg?branch=master)](https://travis-ci.org/kipe/fmi)
 ============================================
 
 This library provides easy to use methods for fetching both observations and
