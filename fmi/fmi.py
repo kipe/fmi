@@ -34,7 +34,7 @@ class FMI(object):
         if identifier in ['ri_10min', 'precipitationamount']:
             return 'precipitation', 1
         if identifier in ['rh', 'humidity']:
-            return 'relative_humidity', 1
+            return 'humidity', 1
         if identifier in ['n_man', 'totalcloudcover']:
             return 'cloud_coverage', 12.5 if identifier == 'n_man' else 1
         if identifier in ['p_sea', 'pressure']:
