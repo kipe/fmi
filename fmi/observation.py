@@ -35,7 +35,6 @@ class Observation(object):
         self.dew_point = point.get('dew_point', None)
         self.precipitation = point.get('precipitation', None)
         self.precipitation_1h = point.get('precipitation_1h', None)
-        self.weather_symbol = int(point.get('weather_symbol', 0))
         self.radiation_global_accumulation = point.get(
             'radiation_global_accumulation', None)
         self.radiation_long_wave_accumulation = point.get(
@@ -46,6 +45,11 @@ class Observation(object):
             'radiation_netsurface_short_wave_accumulation', None)
         self.radiation_diffuse_accumulation = point.get(
             'radiation_diffuse_accumulation', None)
+
+        try:
+            self.weather_symbol = int(point.get('weather_symbol', 0))
+        except ValueError:
+            self.weather_symbol = None
 
     def __repr__(self):
         return '<%s: %s - %.1f C>' % (
