@@ -28,8 +28,25 @@ After setting the environment variables, you can use the library without "any" i
 ```
 from fmi import FMI
 f = FMI()
-# f.forecast() returns a list of Observation -objects (sorry, confusing, I know :P) for the next 36 hours
+# f.forecast() returns a list of Forecast -objects
 print(f.forecast())
+```
+
+### New in 1.1.0
+`place` or `coordinates` are not longer required,
+but they are respected if present.
+This allows the usage of `fmisid` and `wmo` for definition of location,
+allowing better transparency on what location is used.
+
+You can list view a list of locations at:
+https://www.ilmatieteenlaitos.fi/havaintoasemat
+
+For example:
+```
+from fmi import FMI
+f = FMI()
+# Fetch and print observations from Lappeenranta Airport
+print(f.observations(fmisid=101237))
 ```
 
 Forecast icons

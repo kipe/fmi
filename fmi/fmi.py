@@ -1,24 +1,20 @@
 import os
 import requests
 import warnings
-from .observation import Observation
+from .observation import Observation, Forecast
 from bs4 import BeautifulSoup
 
 
 class FMI(object):
-    apikey = None
     api_endpoint = 'https://opendata.fmi.fi/wfs'
 
     def __init__(self, apikey=None, place=None, coordinates=None):
-        self.apikey = os.environ.get('FMI_APIKEY', apikey)
         self.place = os.environ.get('FMI_PLACE', place)
         self.coordinates = os.environ.get('FMI_COORDINATES', coordinates)
-        if self.apikey is not None:
+        if apikey is not None:
             warnings.simplefilter('default')
             warnings.warn('The use of FMI API key is deprecated.',
                           DeprecationWarning)
-        if self.place is None and self.coordinates is None:
-            raise AttributeError('FMI place or coordinates not set.')
 
     def _parse_identifier(self, x):
         identifier = x['gml:id'].split('-')[-1].lower()
@@ -56,7 +52,7 @@ class FMI(object):
             return 'radiation_diffuse_accumulation', 1
         return None, 1
 
-    def _parse_response(self, r):
+    def _parse_response(self, r, klass=Observation):
         bs = BeautifulSoup(r.text, 'html.parser')
 
         d = {}
@@ -84,24 +80,24 @@ class FMI(object):
                 d[timestamp][identifier] = value
 
         return sorted(
-            [Observation(k, v) for k, v in d.items()],
+            [klass(k, v) for k, v in d.items()],
             key=lambda x: x.time)
 
-    def get(self, storedquery_id, **params):
+    def get(self, storedquery_id, klass=Observation, **params):
         query_params = {
             'request': 'getFeature',
             'storedquery_id': storedquery_id,
         }
-        if self.coordinates is None:
+        if self.place is not None:
             query_params['place'] = self.place
-        else:
+        elif self.coordinates is not None:
             query_params['latlon'] = self.coordinates
         query_params.update(params)
 
-        return self._parse_response(
-            requests.get(
-                self.api_endpoint,
-                params=query_params))
+        request = requests.get(self.api_endpoint, params=query_params)
+        request.raise_for_status()
+
+        return self._parse_response(request, klass=klass)
 
     def observations(self, **params):
         return self.get(
@@ -115,4 +111,5 @@ class FMI(object):
         return self.get(
             'fmi::forecast::%s::surface::point::timevaluepair' % (model),
             maxlocations=1,
-            **params)
+            **params,
+            klass=Forecast)
