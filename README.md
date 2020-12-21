@@ -28,7 +28,7 @@ After setting the environment variables, you can use the library without "any" i
 ```
 from fmi import FMI
 f = FMI()
-# f.forecast() returns a list of Observation -objects (sorry, confusing, I know :P) for the next 36 hours
+# f.forecast() returns a list of Forecast -objects
 print(f.forecast())
 ```
 

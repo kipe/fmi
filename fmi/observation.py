@@ -48,8 +48,11 @@ class Observation(object):
             'radiation_diffuse_accumulation', None)
 
     def __repr__(self):
-        return '<Observation: %s - %.1f C>' % (
-            self.time.isoformat(), self.temperature)
+        return '<%s: %s - %.1f C>' % (
+            self.__class__.__name__,
+            self.time.isoformat(),
+            self.temperature,
+        )
 
     @property
     def icon(self):
@@ -79,3 +82,7 @@ class Observation(object):
                 if key not in ['time'] and value is not None
             }
         }
+
+
+class Forecast(Observation):
+    pass
