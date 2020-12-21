@@ -111,5 +111,5 @@ class FMI(object):
         return self.get(
             'fmi::forecast::%s::surface::point::timevaluepair' % (model),
             maxlocations=1,
-            **params,
-            klass=Forecast)
+            klass=Forecast,
+            **params)
