@@ -6,13 +6,11 @@ from fmi import FMI
 
 class TestObservations(unittest.TestCase):
     def test_lappeenranta(self):
-        now = datetime.now(tz=tzutc())
-
         f = FMI(place='Lappeenranta')
         for point in f.observations():
-            assert point.time < now
+            assert point.time < datetime.now(tz=tzutc())
             assert isinstance(point.temperature, float)
 
         for point in f.observations(fmisid=101237):
-            assert point.time < now
+            assert point.time < datetime.now(tz=tzutc())
             assert isinstance(point.temperature, float)
