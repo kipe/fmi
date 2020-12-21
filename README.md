@@ -1,5 +1,6 @@
-FMI weather observation and forecast fetcher [![Build Status](https://travis-ci.org/kipe/fmi.svg?branch=master)](https://travis-ci.org/kipe/fmi)
+FMI weather observation and forecast fetcher
 ============================================
+![Test Status](https://github.com/kipe/fmi/workflows/Test/badge.svg?branch=master)
 
 This library provides easy to use methods for fetching both observations and
 forecast data from [Finnish Meteorological Institute (FMI)](https://en.ilmatieteenlaitos.fi/open-data).
