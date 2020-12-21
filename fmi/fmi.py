@@ -6,18 +6,14 @@ from bs4 import BeautifulSoup
 
 
 class FMI(object):
-    apikey = None
     api_endpoint = 'https://opendata.fmi.fi/wfs'
 
     def __init__(self, apikey=None, place=None, coordinates=None):
-        self.apikey = os.environ.get('FMI_APIKEY', apikey)
         self.place = os.environ.get('FMI_PLACE', place)
         self.coordinates = os.environ.get('FMI_COORDINATES', coordinates)
-        if self.apikey is not None:
+        if apikey is not None:
             warnings.simplefilter('default')
             warnings.warn('The use of FMI API key is deprecated.', DeprecationWarning)
-        if self.place is None and self.coordinates is None:
-            raise AttributeError('FMI place or coordinates not set.')
 
     def _parse_identifier(self, x):
         identifier = x['gml:id'].split('-')[-1].lower()
@@ -91,9 +87,9 @@ class FMI(object):
             'request': 'getFeature',
             'storedquery_id': storedquery_id,
         }
-        if self.coordinates is None:
+        if self.place is not None:
             query_params['place'] = self.place
-        else:
+        elif self.coordinates is not None:
             query_params['latlon'] = self.coordinates
         query_params.update(params)
 

@@ -32,6 +32,23 @@ f = FMI()
 print(f.forecast())
 ```
 
+### New in 1.1.0
+`place` or `coordinates` are not longer required,
+but they are respected if present.
+This allows the usage of `fmisid` and `wmo` for definition of location,
+allowing better transparency on what location is used.
+
+You can list view a list of locations at:
+https://www.ilmatieteenlaitos.fi/havaintoasemat
+
+For example:
+```
+from fmi import FMI
+f = FMI()
+# Fetch and print observations from Lappeenranta Airport
+print(f.observations(fmisid=101237))
+```
+
 Forecast icons
 --------------
 
