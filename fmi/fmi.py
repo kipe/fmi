@@ -13,7 +13,8 @@ class FMI(object):
         self.coordinates = os.environ.get('FMI_COORDINATES', coordinates)
         if apikey is not None:
             warnings.simplefilter('default')
-            warnings.warn('The use of FMI API key is deprecated.', DeprecationWarning)
+            warnings.warn('The use of FMI API key is deprecated.',
+                          DeprecationWarning)
 
     def _parse_identifier(self, x):
         identifier = x['gml:id'].split('-')[-1].lower()

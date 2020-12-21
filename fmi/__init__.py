@@ -1,1 +1,1 @@
-from .fmi import FMI
+from .fmi import FMI  # noqa: F401
