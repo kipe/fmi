@@ -12,3 +12,7 @@ class TestObservations(unittest.TestCase):
         for point in f.observations():
             assert point.time < now
             assert isinstance(point.temperature, float)
+
+        for point in f.observations(fmisid=101237):
+            assert point.time < now
+            assert isinstance(point.temperature, float)
