@@ -15,7 +15,8 @@ class FMI(object):
         self.coordinates = os.environ.get('FMI_COORDINATES', coordinates)
         if self.apikey is not None:
             warnings.simplefilter('default')
-            warnings.warn('The use of FMI API key is deprecated.', DeprecationWarning)
+            warnings.warn('The use of FMI API key is deprecated.',
+                          DeprecationWarning)
         if self.place is None and self.coordinates is None:
             raise AttributeError('FMI place or coordinates not set.')
 
