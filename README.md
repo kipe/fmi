@@ -50,6 +50,35 @@ f = FMI()
 print(f.observations(fmisid=101237))
 ```
 
+### New in 1.2.0
+Added a helper `FMI.fetch_stations()` for fetching the possible stations. For example:
+```
+>>> from fmi import FMI
+>>> from pprint import pprint
+>>> pprint([
+...   station
+...   for station in FMI.fetch_stations()
+...   if station['name'].startswith('Lappeenranta')
+... ])
+
+[{'fmisid': 101252,
+  'groups': ['sää'],
+  'height': 77,
+  'latitude': 61.2,
+  'longitude': 28.47,
+  'name': 'Lappeenranta Hiekkapakka',
+  'started': 2009,
+  'wmo': 2919},
+ {'fmisid': 101237,
+  'groups': ['sää'],
+  'height': 104,
+  'latitude': 61.04,
+  'longitude': 28.13,
+  'name': 'Lappeenranta lentoasema',
+  'started': 1950,
+  'wmo': 2958}]
+```
+
 Forecast icons
 --------------
 
