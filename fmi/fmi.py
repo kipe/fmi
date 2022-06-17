@@ -113,3 +113,25 @@ class FMI(object):
             maxlocations=1,
             klass=Forecast,
             **params)
+
+    @staticmethod
+    def fetch_stations():
+        response = requests.get('https://cdn.fmi.fi/weather-observations/metadata/all-finnish-observation-stations.fi.json')  # noqa: E501
+        response.raise_for_status()
+        return [
+            {
+                'fmisid': station.get('fmisid', None),
+                'wmo': station.get('wmo', None),
+                'name': station.get('name', ''),
+                'latitude': station.get('y', None),
+                'longitude': station.get('x', None),
+                'height': station.get('z', None),
+                'started': station.get('started', 1900),
+                'groups': [
+                    x.strip()
+                    for x in station.get('groups', '').split(',')
+                ],
+            }
+            for station in response.json().get('items', [])
+            if station['ended'] is None
+        ]

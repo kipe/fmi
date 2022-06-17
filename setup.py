@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='fmi_weather',
-    version='1.1.2',
+    version='1.2.0',
     description='FMI weather data fetcher',
     author='Kimmo Huoman',
     author_email='kipenroskaposti@gmail.com',
