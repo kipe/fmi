@@ -105,9 +105,9 @@ class FMI(object):
             maxlocations=1,
             **params)
 
-    def forecast(self, model='hirlam', **params):
-        if model not in ['hirlam', 'harmonie']:
-            raise ValueError('model must be one of "hirlam", "harmonie"')
+    def forecast(self, model='harmonie', **params):
+        if model not in ['harmonie']:
+            raise ValueError('model must be "harmonie"')
         return self.get(
             'fmi::forecast::%s::surface::point::timevaluepair' % (model),
             maxlocations=1,
