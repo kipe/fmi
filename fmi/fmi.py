@@ -68,10 +68,16 @@ class FMI(object):
             # Loop through all the measurement points
             for p in mts.find_all("wml2:point"):
                 # Find timestamp
-                timestamp = p.find("wml2:time").text
+                timestamp_element = p.find("wml2:time")
+                if timestamp_element is None:
+                    continue
+                timestamp = timestamp_element.text
                 # Find value and multiply if by multiplier
                 # given in _parse_identifier()
-                value = float(p.find("wml2:value").text) * multiplier
+                value_element = p.find("wml2:value")
+                if value_element is None:
+                    continue
+                value = float(value_element.text) * multiplier
 
                 # If timestamp isn't already initialized,
                 # initialize as dictionary
