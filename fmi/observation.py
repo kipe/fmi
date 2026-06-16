@@ -25,34 +25,39 @@ class Observation(object):
 
     def __init__(self, timestamp, point):
         self.time = parse_dt(timestamp)
-        self.temperature = point.get('temperature', None)
-        self.wind_speed = point.get('wind_speed', None)
-        self.wind_gust = point.get('wind_gust', None)
-        self.wind_direction = point.get('wind_direction', None)
-        self.humidity = point.get('humidity', None)
-        self.cloud_coverage = point.get('cloud_coverage', None)
-        self.pressure = point.get('pressure', None)
-        self.dew_point = point.get('dew_point', None)
-        self.precipitation = point.get('precipitation', None)
-        self.precipitation_1h = point.get('precipitation_1h', None)
+        self.temperature = point.get("temperature", None)
+        self.wind_speed = point.get("wind_speed", None)
+        self.wind_gust = point.get("wind_gust", None)
+        self.wind_direction = point.get("wind_direction", None)
+        self.humidity = point.get("humidity", None)
+        self.cloud_coverage = point.get("cloud_coverage", None)
+        self.pressure = point.get("pressure", None)
+        self.dew_point = point.get("dew_point", None)
+        self.precipitation = point.get("precipitation", None)
+        self.precipitation_1h = point.get("precipitation_1h", None)
         self.radiation_global_accumulation = point.get(
-            'radiation_global_accumulation', None)
+            "radiation_global_accumulation", None
+        )
         self.radiation_long_wave_accumulation = point.get(
-            'radiation_long_wave_accumulation', None)
+            "radiation_long_wave_accumulation", None
+        )
         self.radiation_netsurface_long_wave_accumulation = point.get(
-            'radiation_netsurface_long_wave_accumulation', None)
+            "radiation_netsurface_long_wave_accumulation", None
+        )
         self.radiation_netsurface_short_wave_accumulation = point.get(
-            'radiation_netsurface_short_wave_accumulation', None)
+            "radiation_netsurface_short_wave_accumulation", None
+        )
         self.radiation_diffuse_accumulation = point.get(
-            'radiation_diffuse_accumulation', None)
+            "radiation_diffuse_accumulation", None
+        )
 
         try:
-            self.weather_symbol = int(point.get('weather_symbol', 0))
+            self.weather_symbol = int(point.get("weather_symbol", 0))
         except ValueError:
             self.weather_symbol = None
 
     def __repr__(self):
-        return '<%s: %s - %.1f C>' % (
+        return "<%s: %s - %.1f C>" % (
             self.__class__.__name__,
             self.time.isoformat(),
             self.temperature,
@@ -65,7 +70,8 @@ class Observation(object):
 
         return os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
-            'symbols/%i.svg' % (self.weather_symbol))
+            "symbols/%i.svg" % (self.weather_symbol),
+        )
 
     @property
     def icon_as_svg(self):
@@ -73,18 +79,18 @@ class Observation(object):
         if icon is None:
             return None
 
-        with open(icon, 'r') as f:
+        with open(icon, "r") as f:
             data = f.read()
         return data
 
     def as_influx_measurement(self):
         return {
-            'time': self.time,
-            'fields': {
+            "time": self.time,
+            "fields": {
                 key: value
                 for key, value in self.__dict__.items()
-                if key not in ['time'] and value is not None
-            }
+                if key not in ["time"] and value is not None
+            },
         }
 
 
