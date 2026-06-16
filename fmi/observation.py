@@ -1,10 +1,11 @@
 import os
 from datetime import datetime
-from dateutil.tz import tzutc
+
 from dateutil.parser import parse as parse_dt
+from dateutil.tz import tzutc
 
 
-class Observation(object):
+class Observation:
     time = datetime(1970, 1, 1, tzinfo=tzutc())
     temperature = None
     wind_speed = None
@@ -57,10 +58,9 @@ class Observation(object):
             self.weather_symbol = None
 
     def __repr__(self):
-        return "<%s: %s - %.1f C>" % (
-            self.__class__.__name__,
-            self.time.isoformat(),
-            self.temperature,
+        return (
+            f"<{self.__class__.__name__}: "
+            f"{self.time.isoformat()} - {self.temperature:.1f} C>"
         )
 
     @property
@@ -70,7 +70,7 @@ class Observation(object):
 
         return os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
-            "symbols/%i.svg" % (self.weather_symbol),
+            f"symbols/{self.weather_symbol}.svg",
         )
 
     @property
@@ -79,7 +79,7 @@ class Observation(object):
         if icon is None:
             return None
 
-        with open(icon, "r") as f:
+        with open(icon) as f:
             data = f.read()
         return data
 

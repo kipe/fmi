@@ -1,11 +1,13 @@
 import os
-import requests
 import warnings
-from .observation import Observation, Forecast
+
+import requests
 from bs4 import BeautifulSoup, XMLParsedAsHTMLWarning
 
+from .observation import Forecast, Observation
 
-class FMI(object):
+
+class FMI:
     api_endpoint = "https://opendata.fmi.fi/wfs"
 
     def __init__(self, apikey=None, place=None, coordinates=None):
@@ -13,7 +15,11 @@ class FMI(object):
         self.coordinates = os.environ.get("FMI_COORDINATES", coordinates)
         if apikey is not None:
             warnings.simplefilter("default")
-            warnings.warn("The use of FMI API key is deprecated.", DeprecationWarning)
+            warnings.warn(
+                "The use of FMI API key is deprecated.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
 
     def _parse_identifier(self, x):
         identifier = x["gml:id"].split("-")[-1].lower()
@@ -81,7 +87,7 @@ class FMI(object):
 
                 # If timestamp isn't already initialized,
                 # initialize as dictionary
-                if timestamp not in d.keys():
+                if timestamp not in d:
                     d[timestamp] = {}
 
                 d[timestamp][identifier] = value
@@ -113,7 +119,7 @@ class FMI(object):
         if model not in ["harmonie"]:
             raise ValueError('model must be "harmonie"')
         return self.get(
-            "fmi::forecast::%s::surface::point::timevaluepair" % (model),
+            f"fmi::forecast::{model}::surface::point::timevaluepair",
             maxlocations=1,
             klass=Forecast,
             **params,
