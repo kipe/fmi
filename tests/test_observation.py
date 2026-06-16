@@ -1,6 +1,8 @@
 import unittest
 from datetime import datetime
+
 from dateutil.tz import tzutc
+
 from fmi import FMI
 
 
