@@ -2,7 +2,7 @@ import os
 import requests
 import warnings
 from .observation import Observation, Forecast
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, XMLParsedAsHTMLWarning
 
 
 class FMI(object):
@@ -53,7 +53,9 @@ class FMI(object):
         return None, 1
 
     def _parse_response(self, r, klass=Observation):
-        bs = BeautifulSoup(r.text, 'html.parser')
+        with warnings.catch_warnings():
+            warnings.filterwarnings('ignore', category=XMLParsedAsHTMLWarning)
+            bs = BeautifulSoup(r.text, 'html.parser')
 
         d = {}
         # Loop over all measurement timeseries
